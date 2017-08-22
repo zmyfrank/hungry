@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import goods from '@/components/goods/goods.vue'
 import seller from 'components/seller/seller'
 import ratings from 'components/ratings/ratings'
+
 Vue.use(Router)
 
 export default new Router({
@@ -22,5 +23,6 @@ export default new Router({
       name: 'ratings',
       component: ratings
     }
-  ]
+  ],
+  linkActiveClass: 'active'
 })
