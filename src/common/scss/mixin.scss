@@ -1,0 +1,16 @@
+/**
+ * @Author: Frank
+ * @Date: 2017/8/24 23:00
+ */
+@mixin border-1px($color){
+  position:relative;
+  &:after{
+    display:block;
+    position:absolute;
+    left:0;
+    bottom:0;
+    width:100%;
+    border-top:1px solid $color;
+    content:' ';
+  }
+}

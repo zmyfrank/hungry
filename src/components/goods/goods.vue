@@ -1,5 +1,5 @@
 <template>
-<div class="header">我是商品</div>
+<div class="header">我不是商品</div>
 </template>
 
 <script>
