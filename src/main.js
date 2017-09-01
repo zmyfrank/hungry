@@ -3,13 +3,16 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import vueResource from 'vue-resource'
 import './common/scss/index.scss'
-Vue.config.productionTip = false
 
+Vue.config.productionTip = false
+Vue.use(vueResource)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
   template: '<App/>',
-  components: { App }
+  components: {App}
 })
+router.replace('goods')

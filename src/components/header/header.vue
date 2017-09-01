@@ -1,15 +1,133 @@
 <template>
     <div class="header">
-        我是  header
+        <div class="content-wrapper">
+            <div class="avatar">
+                <img width="64" height="64" :src="seller.avatar" alt="商家头像">
+            </div>
+            <div class="content">
+                <div class="content-title">
+                    <span class="content-title-brand"></span> <span class="content-title-name">{{seller.name}}</span>
+                </div>
+                <div class="content-description">
+                    {{seller.description}}/{{seller.deliveryTime}}分钟送达
+                </div>
+                <div class="content-support" v-if="seller.supports">
+                    <span class="icon" :class="classMap[seller.supports[0].type]"></span> <span class="content-support-text">
+                        {{seller.supports[0].description}}
+                    </span>
+                </div>
+            </div>
+            <div class="support-content" v-if="seller.supports">
+                <span class="count">{{seller.supports.length}}个</span>
+                <i class="icon-keyboard_arrow_right"></i>
+            </div>
+        </div>
+        <div class="bulletin-wrapper"></div>
     </div>
 </template>
 
 <script>
-  export default {}
+  export default {
+    props: {
+      seller: {
+        type: Object
+      }
+    },
+    created () {
+      this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special']
+    }
+  }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
+    @import "../../common/scss/mixin";
     .header{
-        background-color:antiquewhite;
+        color:#fff;
+        background-color:#999;
+        .content-wrapper{
+            padding:24px 12px 18px 24px;
+            position:relative;
+            vertical-align:top;
+            font-size:0;
+            .avatar{
+                display:inline-block;
+            }
+            .content{
+                display:inline-block;
+                margin-left:16px;
+                vertical-align:top;
+                font-size:12px;
+                line-height:12px;
+                .content-title{
+                    margin-bottom:8px;
+                    .content-title-brand{
+                        display:inline-block;
+                        margin-right:6px;
+                        vertical-align:top;
+                        width:30px;
+                        height:18px;
+                        @include bg-img('brand');
+                        background-size:30px 18px;
+                        background-repeat:no-repeat;
+                    }
+                    .content-title-name{
+                        color:#fff;
+                        line-height:18px;
+                        font-size:16px;
+                        font-weight:bold;
+                    }
+                }
+                .content-description{
+                    margin-bottom:10px;
+                }
+                .content-support{
+                    .icon{
+                        display:inline-block;
+                        margin-right:4px;
+                        vertical-align:top;
+                        width:12px;
+                        height:12px;
+                        background-size:12px;
+                        &.decrease{
+                            @include bg-img('decrease_1')
+                        }
+                        &.discount{
+                            @include bg-img('discount_1')
+                        }
+                        &.guarantee{
+                            @include bg-img('guarantee_1')
+                        }
+                        &.invoice{
+                            @include bg-img('invoice_1')
+                        }
+                        &.special{
+                            @include bg-img('special_1')
+                        }
+                    }
+                    .text{
+                        font-size:10px;
+                    }
+                }
+            }
+            .support-content{
+                position:absolute;
+                right:12px;
+                bottom:14px;
+                padding:0 8px;
+                height:24px;
+                text-align:center;
+                background-color:rgba(0, 0, 0, 0.2);
+                font-size:10px;
+                line-height:24px;
+                border-radius:14px;
+                .count{
+                    vertical-align:top;
+                }
+                .icon-keyboard_arrow_right{
+                    margin-left:2px;
+                    line-height:24px;
+                }
+            }
+        }
     }
 </style>

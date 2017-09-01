@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <v-header></v-header>
+        <v-header :seller="seller"></v-header>
         <div class="tab border-1px">
             <div class="tab-item">
                 <router-link to="goods">商品</router-link>
@@ -19,8 +19,24 @@
 <script>
   import header from 'components/header/header.vue'
 
+  const ERR_OK = 0
   export default {
     name: 'app',
+    data () {
+      return {
+        seller: {}
+      }
+    },
+    created () {
+      this.$http.get('api/seller')
+        .then(res => {
+          let resData = res.body
+          if (resData.errno === ERR_OK) {
+            this.seller = resData.data
+          }
+          console.log(this.seller)
+        })
+    },
     components: {
       'v-header': header
     }
@@ -33,7 +49,6 @@
         font-family:'Avenir', Helvetica, Arial, sans-serif;
         -webkit-font-smoothing:antialiased;
         -moz-osx-font-smoothing:grayscale;
-        text-align:center;
         color:#2c3e50;
     }
     .tab{
@@ -41,8 +56,7 @@
         width:100%;
         height:40px;
         line-height:40px;
-        @include border-1px(rgba(7, 17, 27, 0.1))
-        //border-top:1px solid rgba(7, 17, 27, 0.1);
+        @include border-1px(rgba(7, 17, 27, 0.1));
         .tab-item{
             flex:1;
             text-align:center;
