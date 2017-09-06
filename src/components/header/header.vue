@@ -27,20 +27,48 @@
         <div class="background-img">
             <img :src="seller.avatar" width="100%" height="100%">
         </div>
-        <div class="detail" v-show="showDetail">
-            <div class="detail-wrapper clearfix">
-                <div class="detail-main">
-
+        <transition name="fade">
+            <div class="detail" v-show="showDetail">
+                <div class="detail-wrapper clearfix">
+                    <div class="detail-main">
+                        <div class="detail-main-header">
+                            {{seller.name}}
+                        </div>
+                        <div class="detail-main-star">
+                            <star :size="48" :score="seller.score"></star>
+                        </div>
+                        <div class="detail-main-title">
+                            <div class="title-line"></div>
+                            <div class="title-main">优惠信息</div>
+                            <div class="title-line"></div>
+                        </div>
+                        <div class="detail-main-support-wrapper">
+                            <div class="detail-main-support-item" v-for="item in seller.supports">
+                                <span class="item-icon" :class="classMap[item.type]"></span> <span class="item-text">{{item.description}}</span>
+                            </div>
+                        </div>
+                        <div class="detail-main-title">
+                            <div class="title-line"></div>
+                            <div class="title-main">商家公告</div>
+                            <div class="title-line"></div>
+                        </div>
+                        <div class="detail-main-bulletin">
+                            <div class="text">{{seller.bulletin}}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="detail-footer" @click="detailShow">
+                    <i class="icon-close"></i>
                 </div>
             </div>
-            <div class="detail-footer" @click="detailShow">
-                <i class="icon-close"></i>
-            </div>
-        </div>
+        </transition>
+
     </div>
 </template>
 
 <script>
+  import star from '../star/star.vue'
+
   export default {
     props: {
       seller: {
@@ -59,6 +87,10 @@
       detailShow () {
         this.showDetail = !this.showDetail
       }
+    },
+    computed: {},
+    components: {
+      star
     }
   }
 </script>
@@ -201,13 +233,95 @@
             width:100%;
             height:100%;
             overflow:auto;
-            background-color:rgba(7, 17, 27, 0.8);
             z-index:100;
+            transition:all 0.5s;
+            opacity:1;
+            background-color:rgba(7, 17, 27, 0.8);
+            backdrop-filter:blur(10px);
+            &.fade-enter, &.fade-leave-to{
+                opacity:0;
+                background-color:rgba(7, 17, 27, 0);
+            }
             .detail-wrapper{
                 min-height:100%;
+                width:100%;
                 .detail-main{
                     margin-top:64px;
-                    padding:0 72px 64px;
+                    padding-bottom:64px;
+                    .detail-main-header{
+                        font-size:16px;
+                        font-weight:700;
+                        line-height:16px;
+                        text-align:center;
+                    }
+                    .detail-main-star{
+                        margin-top:32px;
+                        text-align:center;
+                    }
+                    .detail-main-title{
+                        display:flex;
+                        width:80%;
+                        margin:28px auto 24px auto;
+                        .title-line{
+                            margin-bottom:6px;
+                            flex:1;
+                            border-bottom:1px solid rgba(255, 255, 255, 0.2);
+                        }
+                        .title-main{
+                            padding:0 12px;
+                            font-size:14px;
+                            line-height:14px;
+                            font-weight:700;
+                        }
+                    }
+                    .detail-main-support-wrapper{
+                        width:80%;
+                        margin:0 auto;
+                        .detail-main-support-item{
+                            margin-bottom:12px;
+                            padding:0 12px;
+                            &:last-child{
+                                margin-bottom:0;
+                            }
+                            .item-icon{
+                                display:inline-block;
+                                margin-right:6px;
+                                vertical-align:top;
+                                width:16px;
+                                height:16px;
+                                background-size:16px 16px;
+                                background-repeat:no-repeat;
+                                &.decrease{
+                                    @include bg-img('decrease_1')
+                                }
+                                &.discount{
+                                    @include bg-img('discount_1')
+                                }
+                                &.guarantee{
+                                    @include bg-img('guarantee_1')
+                                }
+                                &.invoice{
+                                    @include bg-img('invoice_1')
+                                }
+                                &.special{
+                                    @include bg-img('special_1')
+                                }
+                            }
+                            .item-text{
+                                font-size:12px;
+                                line-height:12px;
+                            }
+                        }
+                    }
+                    .detail-main-bulletin{
+                        width:80%;
+                        margin:0 auto;
+                        .text{
+                            padding:0 12px;
+                            font-size:12px;
+                            line-height:24px;
+                        }
+                    }
                 }
             }
             .detail-footer{
