@@ -44,7 +44,8 @@
                         </div>
                         <div class="detail-main-support-wrapper">
                             <div class="detail-main-support-item" v-for="item in seller.supports">
-                                <span class="item-icon" :class="classMap[item.type]"></span> <span class="item-text">{{item.description}}</span>
+                                <icon class="item-icon" :size="16" :num="1" :type="item.type"></icon>
+                                <span class="item-text">{{item.description}}</span>
                             </div>
                         </div>
                         <div class="detail-main-title">
@@ -68,7 +69,7 @@
 
 <script>
   import star from '../star/star.vue'
-
+  import icon from '../icon/icon.vue'
   export default {
     props: {
       seller: {
@@ -81,7 +82,7 @@
       }
     },
     created () {
-      this.classMap = ['decrease', 'discount', 'guarantee', 'invoice', 'special']
+      this.classMap = ['decrease', 'discount', 'special', 'invoice', 'guarantee']
     },
     methods: {
       detailShow () {
@@ -90,7 +91,8 @@
     },
     computed: {},
     components: {
-      star
+      star,
+      icon
     }
   }
 </script>
@@ -284,28 +286,7 @@
                                 margin-bottom:0;
                             }
                             .item-icon{
-                                display:inline-block;
                                 margin-right:6px;
-                                vertical-align:top;
-                                width:16px;
-                                height:16px;
-                                background-size:16px 16px;
-                                background-repeat:no-repeat;
-                                &.decrease{
-                                    @include bg-img('decrease_1')
-                                }
-                                &.discount{
-                                    @include bg-img('discount_1')
-                                }
-                                &.guarantee{
-                                    @include bg-img('guarantee_1')
-                                }
-                                &.invoice{
-                                    @include bg-img('invoice_1')
-                                }
-                                &.special{
-                                    @include bg-img('special_1')
-                                }
                             }
                             .item-text{
                                 font-size:12px;
