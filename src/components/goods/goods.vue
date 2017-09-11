@@ -33,13 +33,14 @@
                 </li>
             </ul>
         </div>
+        <shopCart></shopCart>
     </div>
 </template>
 
 <script>
   import icon from '../icon/icon.vue'
   import BScroll from 'better-scroll'
-
+  import shopCart from '../shopcart/shopcart.vue'
   const ERR_OK = 0
   export default {
     data () {
@@ -102,7 +103,8 @@
       }
     },
     components: {
-      icon
+      icon,
+      shopCart
     }
   }
 </script>
