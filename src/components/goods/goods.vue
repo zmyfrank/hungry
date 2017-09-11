@@ -2,17 +2,17 @@
     <div class="goods">
         <div class="goods-menu-wrapper" ref="menuWrapper">
             <ul>
-                <li class="goods-menu-item" v-for="item in goods">
-                <span class="text">
-                     <icon class="icon" v-show="item.type>-1" :type="item.type" :num="3" :size="12"></icon>
-                    <span class="text-item">{{item.name}}</span>
-                </span>
+                <li class="goods-menu-item" v-for="(item, index) in goods" :class="{'current':currentIndex===index}" @click="selectMenu(index)">
+                    <div class="text">
+                        <icon class="icon" v-show="item.type>-1" :type="item.type" :num="3" :size="12"></icon>
+                        <span class="text-item">{{item.name}}</span>
+                    </div>
                 </li>
             </ul>
         </div>
         <div class="goods-item-wrapper" ref="itemWrapper">
             <ul>
-                <li class="goods-item" v-for="item in goods">
+                <li class="goods-item goods-item-hook" v-for="item in goods">
                     <h2 class="title">{{item.name}}</h2>
                     <div class="item" v-for="food in item.foods">
                         <div class="item-img">
@@ -44,7 +44,24 @@
   export default {
     data () {
       return {
-        goods: {}
+        goods: {},
+        itemHeight: [],
+        classArr: [],
+        scrollY: 0
+      }
+    },
+    computed: {
+      currentIndex () {
+        for (let i = 0; i < this.itemHeight.length; i++) {
+          let heightFirst = this.itemHeight[i]
+          let heightNext = this.itemHeight[i + 1]
+          if (!heightNext || (this.scrollY >= heightFirst && this.scrollY < heightNext)) {
+            // console.log(`当前高度${this.scrollY}，第一高度${heightFirst}，当前的i值${i}`)
+            // console.log(this.itemHeight)
+            return i
+          }
+        }
+        return 0
       }
     },
     created () {
@@ -53,15 +70,35 @@
           let resData = res.body
           if (resData.errno === ERR_OK) {
             this.goods = resData.data
-            this.$nextTick(() => this._initScroll())
-            console.log(this.goods)
+            this.$nextTick(() => {
+              // 应用better scroll
+              this._initScroll()
+              // 计算高度
+              this._calculateHeight()
+            })
           }
         })
     },
     methods: {
       _initScroll () {
-        this.menuScroll = new BScroll(this.$refs.menuWrapper, {})
-        this.itemScroll = new BScroll(this.$refs.itemWrapper, {})
+        this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true})
+        this.itemScroll = new BScroll(this.$refs.itemWrapper, {probeType: 3})
+        this.itemScroll.on('scroll', (pos) => {
+          this.scrollY = Math.abs(Math.round(pos.y))
+        })
+      },
+      _calculateHeight () {
+        this.classArr = this.$refs.itemWrapper.getElementsByClassName('goods-item-hook')
+        let height = 0
+        this.itemHeight.push(height)
+        for (let i = 0; i < this.classArr.length; i++) {
+          height += this.classArr[i].clientHeight
+          this.itemHeight.push(height)
+        }
+      },
+      selectMenu (index) {
+        let el = this.classArr[index]
+        this.itemScroll.scrollToElement(el, 300)
       }
     },
     components: {
@@ -86,14 +123,21 @@
             color:rgb(240, 20, 20);
             .goods-menu-item{
                 display:table;
-                margin:0 12px;
+                padding:0 12px;
                 font-size:0;
                 width:56px;
                 height:54px;
                 line-height:14px;
-                @include border-1px(rgba(7, 17, 27, 0.1));
-                &:last-child{
-                    @include border-none()
+                background-color:#f3f5f7;
+                &.current{
+                    position:relative;
+                    z-index:10;
+                    margin-top:-1px;
+                    background-color:#fff;
+                    font-weight:700;
+                    .text{
+                        @include border-none()
+                    }
                 }
                 .icon{
                     margin-right:2px;
@@ -102,6 +146,7 @@
                 .text{
                     display:table-cell;
                     vertical-align:middle;
+                    @include border-1px(rgba(7, 17, 27, 0.1));
                     .text-item{
                         vertical-align:top;
                         font-size:12px;
