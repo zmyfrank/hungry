@@ -12,7 +12,9 @@
                     {{seller.description}}/{{seller.deliveryTime}}分钟送达
                 </div>
                 <div class="content-support" v-if="seller.supports">
-                    <span class="icon" :class="classMap[seller.supports[0].type]"></span> <span class="content-support-text">
+                    <icon class="icon" :size="16" :num="1" :type="seller.supports[0].type"></icon>
+                    <!---->
+                    <span class="content-support-text">
                         {{seller.supports[0].description}}
                     </span>
                 </div>
@@ -140,30 +142,12 @@
                     margin-bottom:10px;
                 }
                 .content-support{
+                    font-size:0;
                     .icon{
-                        display:inline-block;
+                        margin-top: -2px;
                         margin-right:4px;
-                        vertical-align:top;
-                        width:12px;
-                        height:12px;
-                        background-size:12px;
-                        &.decrease{
-                            @include bg-img('decrease_1')
-                        }
-                        &.discount{
-                            @include bg-img('discount_1')
-                        }
-                        &.guarantee{
-                            @include bg-img('guarantee_1')
-                        }
-                        &.invoice{
-                            @include bg-img('invoice_1')
-                        }
-                        &.special{
-                            @include bg-img('special_1')
-                        }
                     }
-                    .text{
+                    .content-support-text{
                         font-size:10px;
                     }
                 }
