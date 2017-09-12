@@ -28,12 +28,14 @@
                                 <span class="item-price-left">¥{{food.price}}</span><span v-show="food.oldPrice&&food.oldPrice!==''" class="item-price-right">¥{{food.oldPrice}}</span>
                             </div>
                         </div>
-
+                        <div class="cart-wrapper">
+                            <cartcontrol :food="food"></cartcontrol>
+                        </div>
                     </div>
                 </li>
             </ul>
         </div>
-        <shopCart></shopCart>
+        <shopCart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :selectFoods="selectFoods"></shopCart>
     </div>
 </template>
 
@@ -41,11 +43,18 @@
   import icon from '../icon/icon.vue'
   import BScroll from 'better-scroll'
   import shopCart from '../shopcart/shopcart.vue'
+  import cartcontrol from '../cartcontrol/cartcontrol.vue'
+
   const ERR_OK = 0
   export default {
+    props: {
+      seller: {
+        type: Object
+      }
+    },
     data () {
       return {
-        goods: {},
+        goods: [],
         itemHeight: [],
         classArr: [],
         scrollY: 0
@@ -63,6 +72,17 @@
           }
         }
         return 0
+      },
+      selectFoods () {
+        let seLectFood = []
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) {
+              seLectFood.push(food)
+            }
+          })
+        })
+        return seLectFood
       }
     },
     created () {
@@ -83,7 +103,7 @@
     methods: {
       _initScroll () {
         this.menuScroll = new BScroll(this.$refs.menuWrapper, {click: true})
-        this.itemScroll = new BScroll(this.$refs.itemWrapper, {probeType: 3})
+        this.itemScroll = new BScroll(this.$refs.itemWrapper, {probeType: 3, click: true})
         this.itemScroll.on('scroll', (pos) => {
           this.scrollY = Math.abs(Math.round(pos.y))
         })
@@ -104,7 +124,8 @@
     },
     components: {
       icon,
-      shopCart
+      shopCart,
+      cartcontrol
     }
   }
 </script>
@@ -170,11 +191,17 @@
                 }
                 .item{
                     display:flex;
+                    position:relative;
                     margin:18px 18px 0 18px;
                     padding-bottom:18px;
                     @include border-1px(rgba(7, 17, 27, 0.1));
                     &:last-child{
                         @include border-none()
+                    }
+                    .cart-wrapper{
+                        position:absolute;
+                        right:0;
+                        bottom:12px;
                     }
                     .item-img{
                         flex:0 0 57px;
