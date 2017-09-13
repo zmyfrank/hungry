@@ -5,8 +5,8 @@
                 <span class="inner icon-remove_circle_outline"></span>
             </div>
         </transition>
-            <div class="cart-count" v-show="food.count>0" :key="2">{{food.count}}</div>
-            <div class="cart-add icon-add_circle" @click="addItem" :key="3"></div>
+        <div class="cart-count" v-show="food.count>0" :key="2">{{food.count}}</div>
+        <div class="cart-add icon-add_circle" @click="addItem" :key="3"></div>
     </div>
 </template>
 
@@ -28,6 +28,9 @@
         }
       },
       decreaseItem () {
+        if (this.food.count <= 0) {
+          return
+        }
         this.food.count--
       }
     }

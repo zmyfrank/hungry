@@ -135,6 +135,7 @@
     .goods{
         display:flex;
         position:absolute;
+        width:100%;
         top:174px;
         bottom:46px;
         overflow:hidden;
