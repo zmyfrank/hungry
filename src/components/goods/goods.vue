@@ -35,7 +35,7 @@
                 </li>
             </ul>
         </div>
-        <shopCart :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :selectFoods="selectFoods"></shopCart>
+        <shopCart ref="shopCart" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice" :selectFoods="selectFoods"></shopCart>
     </div>
 </template>
 
@@ -44,6 +44,7 @@
   import BScroll from 'better-scroll'
   import shopCart from '../shopcart/shopcart.vue'
   import cartcontrol from '../cartcontrol/cartcontrol.vue'
+  import Bus from '../../bus'
 
   const ERR_OK = 0
   export default {
@@ -99,6 +100,9 @@
             })
           }
         })
+      Bus.$on('car.add', (target) => {
+        this._dorp(target)
+      })
     },
     methods: {
       _initScroll () {
@@ -120,6 +124,9 @@
       selectMenu (index) {
         let el = this.classArr[index]
         this.itemScroll.scrollToElement(el, 300)
+      },
+      _dorp (target) {
+        this.$refs.shopCart.drop(target)
       }
     },
     components: {

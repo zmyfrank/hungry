@@ -12,6 +12,7 @@
 
 <script>
   import Vue from 'vue'
+  import Bus from '../../bus'
 
   export default {
     props: {
@@ -20,12 +21,13 @@
       }
     },
     methods: {
-      addItem () {
+      addItem (event) {
         if (!this.food.count) {
           Vue.set(this.food, 'count', 1)
         } else {
           this.food.count++
         }
+        Bus.$emit('car.add', event.target)
       },
       decreaseItem () {
         if (this.food.count <= 0) {
