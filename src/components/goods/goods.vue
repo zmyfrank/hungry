@@ -126,7 +126,8 @@
         this.itemScroll.scrollToElement(el, 300)
       },
       _dorp (target) {
-        this.$refs.shopCart.drop(target)
+        // 优化体验
+        this.$nextTick(() => this.$refs.shopCart.drop(target))
       }
     },
     components: {

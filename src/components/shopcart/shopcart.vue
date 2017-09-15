@@ -1,6 +1,6 @@
 <template>
     <div class="shopcart">
-        <div class="shopcart-content">
+        <div class="shopcart-content" @click="flodShow">
             <div class="content-left">
                 <div class="car-wrapper">
                     <div class="car-item" :class="{'highlight':totalCount>0}">
@@ -26,15 +26,36 @@
                 </div>
             </transition-group>
         </div>
+        <transition name="flod">
+            <div class="shopcart-list" v-show="showFlod">
+                <div class="shopcart-list-header">
+                    <span class="left">购物车</span> <span class="right">清空</span>
+                </div>
+                <div class="shopcart-list-main">
+                    <div class="shopcart-list-item" v-for="food in selectFoods">
+                        <div class="left">{{food.name}}</div>
+                        <div class="right">
+                            <div class="price">￥{{food.price * food.count}}</div>
+                            <div class="control-wrap">
+                                <cartcontrol :food="food"></cartcontrol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition>
     </div>
 </template>
 
 <script>
+  import cartcontrol from '../cartcontrol/cartcontrol.vue'
+
   export default {
     data () {
       return {
         balls: [{show: false}, {show: false}, {show: false}, {show: false}, {show: false}],
-        dropBall: []
+        dropBall: [],
+        showFlod: false
       }
     },
     props: {
@@ -127,12 +148,21 @@
         } else if (this.totalPrice >= this.minPrice) {
           return '去结算'
         }
+      },
+      showFlod () {
+        if (this.selectFoods.length < 1) {
+          this.showFlod = false
+        }
       }
+    },
+    components: {
+      cartcontrol
     }
   }
 </script>
 
 <style lang="scss" rel="stylesheet/scss" scoped>
+    @import "../../common/scss/mixin.scss";
     .shopcart{
         position:fixed;
         left:0;
@@ -216,6 +246,7 @@
                 flex:0 0 105px;
                 width:105px;
                 height:48px;
+                margin-top:1px;
                 line-height:48px;
                 background-color:rgb(43, 51, 59);
                 text-align:center;
@@ -242,11 +273,78 @@
                 }
             }
         }
+        .shopcart-list{
+            position:fixed;
+            left:0;
+            bottom:47px;
+            max-height:250px;
+            width:100%;
+            overflow:hidden;
+            z-index:-1;
+            .shopcart-list-header{
+                display:flex;
+                justify-content:space-between;
+                height:40px;
+                line-height:40px;
+                padding:0 18px;
+                background-color:#f3f5f7;
+                border-bottom:2px solid rgba(7, 17, 27, 0.1);
+                .left{
+                    text-align:left;
+                    font-size:14px;
+                    font-weight:200;
+                    color:rgb(7, 17, 27);
+                }
+                .right{
+                    font-size:12px;
+                    color:rgb(0, 160, 220);
+                }
+            }
+            .shopcart-list-main{
+                max-height:210px;
+                overflow:hidden;
+                background-color:#fff;
+                .shopcart-list-item{
+                    display:flex;
+                    justify-content:space-between;
+                    font-size:0;
+                    height:48px;
+                    margin:0 18px;
+                    box-sizing:border-box;
+                    line-height:48px;
+                    @include border-1px(rgba(7, 17, 27, 0.1));
+                    &:last-child{
+                        @include border-none()
+                    }
+                    .left{
+                        font-size:14px;
+                        color:rgb(7, 17, 27);
+                    }
+                    .right{
+                        .price{
+                            display:inline-block;
+                            vertical-align:top;
+                            margin-right:6px;
+                            font-size:14px;
+                            font-weight:700;
+                            color:rgb(240, 20, 20);
+                        }
+                        .control-wrap{
+                            vertical-align:top;
+                            display:inline-block;
+                            height:100%;
+                            box-sizing:border-box;
+                            margin-top:3px;
+                        }
+                    }
+                }
+            }
+        }
     }
     .drop-enter-active{
-        transition:all 0.4s;
+        transition:all 0.4s cubic-bezier(0.49, -0.29, 0.75, 0.21);
         .inner{
-            transition:all 0.4s;
+            transition:all 0.4s linear;
         }
     }
 </style>
